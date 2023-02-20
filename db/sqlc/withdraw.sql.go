@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createWithdraw = `-- name: CreateWithdraw :one
@@ -22,9 +21,9 @@ INSERT INTO withdraw (
 `
 
 type CreateWithdrawParams struct {
-	FromAccountID sql.NullInt64   `json:"from_account_id"`
-	AmountFiat    sql.NullFloat64 `json:"amount_fiat"`
-	AmountCoins   sql.NullInt64   `json:"amount_coins"`
+	FromAccountID int64   `json:"from_account_id"`
+	AmountFiat    float64 `json:"amount_fiat"`
+	AmountCoins   int64   `json:"amount_coins"`
 }
 
 func (q *Queries) CreateWithdraw(ctx context.Context, arg CreateWithdrawParams) (Withdraw, error) {
@@ -47,7 +46,7 @@ WHERE from_account_id = $1
 ORDER BY created_at
 `
 
-func (q *Queries) GetAllWithdraw(ctx context.Context, fromAccountID sql.NullInt64) ([]Withdraw, error) {
+func (q *Queries) GetAllWithdraw(ctx context.Context, fromAccountID int64) ([]Withdraw, error) {
 	rows, err := q.db.QueryContext(ctx, getAllWithdraw, fromAccountID)
 	if err != nil {
 		return nil, err
@@ -104,9 +103,9 @@ RETURNING id, from_account_id, amount_fiat, amount_coins, status_w, created_at
 `
 
 type UpdateWithdrawParams struct {
-	ID          int64           `json:"id"`
-	AmountCoins sql.NullInt64   `json:"amount_coins"`
-	AmountFiat  sql.NullFloat64 `json:"amount_fiat"`
+	ID          int64   `json:"id"`
+	AmountCoins int64   `json:"amount_coins"`
+	AmountFiat  float64 `json:"amount_fiat"`
 }
 
 func (q *Queries) UpdateWithdraw(ctx context.Context, arg UpdateWithdrawParams) (Withdraw, error) {
@@ -131,8 +130,8 @@ RETURNING id, from_account_id, amount_fiat, amount_coins, status_w, created_at
 `
 
 type UpdateWithdrawStatusParams struct {
-	ID      int64      `json:"id"`
-	StatusW NullStatus `json:"status_w"`
+	ID      int64  `json:"id"`
+	StatusW Status `json:"status_w"`
 }
 
 func (q *Queries) UpdateWithdrawStatus(ctx context.Context, arg UpdateWithdrawStatusParams) (Withdraw, error) {

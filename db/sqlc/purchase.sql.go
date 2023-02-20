@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPurchase = `-- name: CreatePurchase :one
@@ -22,10 +21,10 @@ INSERT INTO purchase (
 `
 
 type CreatePurchaseParams struct {
-	FromAccountID sql.NullInt64   `json:"from_account_id"`
-	AmountFiat    sql.NullFloat64 `json:"amount_fiat"`
-	AmountCoins   sql.NullInt64   `json:"amount_coins"`
-	StatusP       NullStatus      `json:"status_p"`
+	FromAccountID int64   `json:"from_account_id"`
+	AmountFiat    float64 `json:"amount_fiat"`
+	AmountCoins   int64   `json:"amount_coins"`
+	StatusP       Status  `json:"status_p"`
 }
 
 func (q *Queries) CreatePurchase(ctx context.Context, arg CreatePurchaseParams) (Purchase, error) {
@@ -72,7 +71,7 @@ WHERE from_account_id = $1
 ORDER BY created_at
 `
 
-func (q *Queries) GetPurchases(ctx context.Context, fromAccountID sql.NullInt64) ([]Purchase, error) {
+func (q *Queries) GetPurchases(ctx context.Context, fromAccountID int64) ([]Purchase, error) {
 	rows, err := q.db.QueryContext(ctx, getPurchases, fromAccountID)
 	if err != nil {
 		return nil, err
@@ -110,9 +109,9 @@ RETURNING id, from_account_id, amount_fiat, amount_coins, status_p, created_at
 `
 
 type UpdatePurchaseParams struct {
-	ID          int64           `json:"id"`
-	AmountCoins sql.NullInt64   `json:"amount_coins"`
-	AmountFiat  sql.NullFloat64 `json:"amount_fiat"`
+	ID          int64   `json:"id"`
+	AmountCoins int64   `json:"amount_coins"`
+	AmountFiat  float64 `json:"amount_fiat"`
 }
 
 func (q *Queries) UpdatePurchase(ctx context.Context, arg UpdatePurchaseParams) (Purchase, error) {
@@ -137,8 +136,8 @@ RETURNING id, from_account_id, amount_fiat, amount_coins, status_p, created_at
 `
 
 type UpdatePurchaseStatusParams struct {
-	ID      int64      `json:"id"`
-	StatusP NullStatus `json:"status_p"`
+	ID      int64  `json:"id"`
+	StatusP Status `json:"status_p"`
 }
 
 func (q *Queries) UpdatePurchaseStatus(ctx context.Context, arg UpdatePurchaseStatusParams) (Purchase, error) {

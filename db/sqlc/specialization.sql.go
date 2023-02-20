@@ -21,9 +21,9 @@ INSERT INTO specialization (
 `
 
 type CreateSpecializationParams struct {
-	Branch   sql.NullInt64 `json:"branch"`
-	SpecName string        `json:"spec_name"`
-	Descr    string        `json:"descr"`
+	Branch   int64  `json:"branch"`
+	SpecName string `json:"spec_name"`
+	Descr    string `json:"descr"`
 }
 
 func (q *Queries) CreateSpecialization(ctx context.Context, arg CreateSpecializationParams) (Specialization, error) {
@@ -75,7 +75,7 @@ WHERE user_id = $1
 ORDER BY id
 `
 
-func (q *Queries) GetSpecializationFrom(ctx context.Context, userID sql.NullInt64) ([]Specialization, error) {
+func (q *Queries) GetSpecializationFrom(ctx context.Context, userID int64) ([]Specialization, error) {
 	rows, err := q.db.QueryContext(ctx, getSpecializationFrom, userID)
 	if err != nil {
 		return nil, err

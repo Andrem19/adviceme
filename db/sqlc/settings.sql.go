@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createSettings = `-- name: CreateSettings :one
@@ -18,7 +17,7 @@ INSERT INTO settings (
 ) RETURNING id, rate, created_at
 `
 
-func (q *Queries) CreateSettings(ctx context.Context, rate sql.NullFloat64) (Setting, error) {
+func (q *Queries) CreateSettings(ctx context.Context, rate float64) (Setting, error) {
 	row := q.db.QueryRowContext(ctx, createSettings, rate)
 	var i Setting
 	err := row.Scan(&i.ID, &i.Rate, &i.CreatedAt)
@@ -73,8 +72,8 @@ RETURNING id, rate, created_at
 `
 
 type UpdateSettingsRateParams struct {
-	ID   int64           `json:"id"`
-	Rate sql.NullFloat64 `json:"rate"`
+	ID   int64   `json:"id"`
+	Rate float64 `json:"rate"`
 }
 
 func (q *Queries) UpdateSettingsRate(ctx context.Context, arg UpdateSettingsRateParams) (Setting, error) {

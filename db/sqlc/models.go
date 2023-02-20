@@ -60,8 +60,8 @@ type Branch struct {
 }
 
 type Entry struct {
-	ID     int64         `json:"id"`
-	UserID sql.NullInt64 `json:"user_id"`
+	ID     int64 `json:"id"`
+	UserID int64 `json:"user_id"`
 	// can be negative or positive
 	Amount    int64     `json:"amount"`
 	Messages  int64     `json:"messages"`
@@ -69,44 +69,44 @@ type Entry struct {
 }
 
 type Message struct {
-	ID             int64         `json:"id"`
-	WhoAskID       sql.NullInt64 `json:"who_ask_id"`
-	WhoAnswerID    sql.NullInt64 `json:"who_answer_id"`
-	Specialization sql.NullInt64 `json:"specialization"`
-	MessageText    string        `json:"message_text"`
-	CreatedAt      time.Time     `json:"created_at"`
+	ID             int64     `json:"id"`
+	WhoAskID       int64     `json:"who_ask_id"`
+	WhoAnswerID    int64     `json:"who_answer_id"`
+	Specialization int64     `json:"specialization"`
+	MessageText    string    `json:"message_text"`
+	CreatedAt      time.Time `json:"created_at"`
 }
 
 type Purchase struct {
-	ID            int64           `json:"id"`
-	FromAccountID sql.NullInt64   `json:"from_account_id"`
-	AmountFiat    sql.NullFloat64 `json:"amount_fiat"`
-	AmountCoins   sql.NullInt64   `json:"amount_coins"`
-	StatusP       NullStatus      `json:"status_p"`
-	CreatedAt     time.Time       `json:"created_at"`
+	ID            int64     `json:"id"`
+	FromAccountID int64     `json:"from_account_id"`
+	AmountFiat    float64   `json:"amount_fiat"`
+	AmountCoins   int64     `json:"amount_coins"`
+	StatusP       Status    `json:"status_p"`
+	CreatedAt     time.Time `json:"created_at"`
 }
 
 type Setting struct {
-	ID        int64           `json:"id"`
-	Rate      sql.NullFloat64 `json:"rate"`
-	CreatedAt time.Time       `json:"created_at"`
+	ID        int64     `json:"id"`
+	Rate      float64   `json:"rate"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type Specialization struct {
-	ID       int64         `json:"id"`
-	Branch   sql.NullInt64 `json:"branch"`
-	UserID   sql.NullInt64 `json:"user_id"`
-	SpecName string        `json:"spec_name"`
-	Descr    string        `json:"descr"`
-	IsOnline sql.NullBool  `json:"is_online"`
+	ID       int64        `json:"id"`
+	Branch   int64        `json:"branch"`
+	UserID   int64        `json:"user_id"`
+	SpecName string       `json:"spec_name"`
+	Descr    string       `json:"descr"`
+	IsOnline sql.NullBool `json:"is_online"`
 }
 
 type Transfer struct {
-	ID            int64         `json:"id"`
-	FromAccountID sql.NullInt64 `json:"from_account_id"`
-	ToAccountID   sql.NullInt64 `json:"to_account_id"`
-	Amount        sql.NullInt64 `json:"amount"`
-	CreatedAt     time.Time     `json:"created_at"`
+	ID            int64     `json:"id"`
+	FromAccountID int64     `json:"from_account_id"`
+	ToAccountID   int64     `json:"to_account_id"`
+	Amount        int64     `json:"amount"`
+	CreatedAt     time.Time `json:"created_at"`
 }
 
 type UserAccount struct {
@@ -120,10 +120,10 @@ type UserAccount struct {
 }
 
 type Withdraw struct {
-	ID            int64           `json:"id"`
-	FromAccountID sql.NullInt64   `json:"from_account_id"`
-	AmountFiat    sql.NullFloat64 `json:"amount_fiat"`
-	AmountCoins   sql.NullInt64   `json:"amount_coins"`
-	StatusW       NullStatus      `json:"status_w"`
-	CreatedAt     time.Time       `json:"created_at"`
+	ID            int64     `json:"id"`
+	FromAccountID int64     `json:"from_account_id"`
+	AmountFiat    float64   `json:"amount_fiat"`
+	AmountCoins   int64     `json:"amount_coins"`
+	StatusW       Status    `json:"status_w"`
+	CreatedAt     time.Time `json:"created_at"`
 }

@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createEntries = `-- name: CreateEntries :one
@@ -21,9 +20,9 @@ INSERT INTO entries (
 `
 
 type CreateEntriesParams struct {
-	UserID   sql.NullInt64 `json:"user_id"`
-	Amount   int64         `json:"amount"`
-	Messages int64         `json:"messages"`
+	UserID   int64 `json:"user_id"`
+	Amount   int64 `json:"amount"`
+	Messages int64 `json:"messages"`
 }
 
 func (q *Queries) CreateEntries(ctx context.Context, arg CreateEntriesParams) (Entry, error) {
@@ -45,7 +44,7 @@ WHERE user_id = $1
 ORDER BY id
 `
 
-func (q *Queries) GetAllUserEntries(ctx context.Context, userID sql.NullInt64) ([]Entry, error) {
+func (q *Queries) GetAllUserEntries(ctx context.Context, userID int64) ([]Entry, error) {
 	rows, err := q.db.QueryContext(ctx, getAllUserEntries, userID)
 	if err != nil {
 		return nil, err

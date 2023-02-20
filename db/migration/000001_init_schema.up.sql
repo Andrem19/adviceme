@@ -10,15 +10,15 @@ CREATE TABLE "user_account" (
 
 CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
-  "from_account_id" bigint,
-  "to_account_id" bigint,
-  "amount" bigint,
+  "from_account_id" bigint NOT NULL,
+  "to_account_id" bigint NOT NULL,
+  "amount" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "entries" (
   "id" bigserial PRIMARY KEY,
-  "user_id" bigint,
+  "user_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
   "messages" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
@@ -26,8 +26,8 @@ CREATE TABLE "entries" (
 
 CREATE TABLE "specialization" (
   "id" bigserial PRIMARY KEY,
-  "branch" bigint,
-  "user_id" bigint,
+  "branch" bigint NOT NULL,
+  "user_id" bigint NOT NULL,
   "spec_name" varchar NOT NULL,
   "descr" varchar NOT NULL,
   "is_online" boolean DEFAULT false
@@ -35,9 +35,9 @@ CREATE TABLE "specialization" (
 
 CREATE TABLE "messages" (
   "id" bigserial PRIMARY KEY,
-  "who_ask_id" bigint,
-  "who_answer_id" bigint,
-  "specialization" bigint,
+  "who_ask_id" bigint NOT NULL,
+  "who_answer_id" bigint NOT NULL,
+  "specialization" bigint NOT NULL,
   "message_text" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
@@ -51,25 +51,25 @@ CREATE TYPE status AS ENUM ('init', 'processed', 'completed');
 
 CREATE TABLE "purchase" (
   "id" bigserial PRIMARY KEY,
-  "from_account_id" bigint,
-  "amount_fiat" float8,
-  "amount_coins" bigint,
-  "status_p" status,
+  "from_account_id" bigint NOT NULL,
+  "amount_fiat" float8 NOT NULL,
+  "amount_coins" bigint NOT NULL,
+  "status_p" status NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "withdraw" (
   "id" bigserial PRIMARY KEY,
-  "from_account_id" bigint,
-  "amount_fiat" float8,
-  "amount_coins" bigint,
-  "status_w" status,
+  "from_account_id" bigint NOT NULL,
+  "amount_fiat" float8 NOT NULL,
+  "amount_coins" bigint NOT NULL,
+  "status_w" status NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "settings" (
   "id" bigserial PRIMARY KEY,
-  "rate" float8,
+  "rate" float8 NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 

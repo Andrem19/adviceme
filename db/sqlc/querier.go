@@ -6,7 +6,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 type Querier interface {
@@ -15,7 +14,7 @@ type Querier interface {
 	CreateEntries(ctx context.Context, arg CreateEntriesParams) (Entry, error)
 	CreateMessages(ctx context.Context, arg CreateMessagesParams) (Message, error)
 	CreatePurchase(ctx context.Context, arg CreatePurchaseParams) (Purchase, error)
-	CreateSettings(ctx context.Context, rate sql.NullFloat64) (Setting, error)
+	CreateSettings(ctx context.Context, rate float64) (Setting, error)
 	CreateSpecialization(ctx context.Context, arg CreateSpecializationParams) (Specialization, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (UserAccount, error)
@@ -27,22 +26,22 @@ type Querier interface {
 	GetAccount(ctx context.Context, id int64) (UserAccount, error)
 	GetAccountForUpdate(ctx context.Context, id int64) (UserAccount, error)
 	GetAllSettings(ctx context.Context) ([]Setting, error)
-	GetAllUserEntries(ctx context.Context, userID sql.NullInt64) ([]Entry, error)
-	GetAllWithdraw(ctx context.Context, fromAccountID sql.NullInt64) ([]Withdraw, error)
+	GetAllUserEntries(ctx context.Context, userID int64) ([]Entry, error)
+	GetAllWithdraw(ctx context.Context, fromAccountID int64) ([]Withdraw, error)
 	GetBranch(ctx context.Context, id int64) (Branch, error)
 	GetBranchFrom(ctx context.Context) ([]Branch, error)
 	GetEntries(ctx context.Context, id int64) (Entry, error)
 	GetMessages(ctx context.Context, id int64) (Message, error)
-	GetMessagesFrom(ctx context.Context, whoAskID sql.NullInt64) ([]Message, error)
-	GetMessagesTo(ctx context.Context, whoAnswerID sql.NullInt64) ([]Message, error)
+	GetMessagesFrom(ctx context.Context, whoAskID int64) ([]Message, error)
+	GetMessagesTo(ctx context.Context, whoAnswerID int64) ([]Message, error)
 	GetPurchase(ctx context.Context, id int64) (Purchase, error)
-	GetPurchases(ctx context.Context, fromAccountID sql.NullInt64) ([]Purchase, error)
+	GetPurchases(ctx context.Context, fromAccountID int64) ([]Purchase, error)
 	GetSettings(ctx context.Context, id int64) (Setting, error)
 	GetSpecialization(ctx context.Context, id int64) (Specialization, error)
-	GetSpecializationFrom(ctx context.Context, userID sql.NullInt64) ([]Specialization, error)
+	GetSpecializationFrom(ctx context.Context, userID int64) ([]Specialization, error)
 	GetTransfer(ctx context.Context, id int64) (Transfer, error)
-	GetTransfersFrom(ctx context.Context, fromAccountID sql.NullInt64) ([]Transfer, error)
-	GetTransfersTo(ctx context.Context, toAccountID sql.NullInt64) ([]Transfer, error)
+	GetTransfersFrom(ctx context.Context, fromAccountID int64) ([]Transfer, error)
+	GetTransfersTo(ctx context.Context, toAccountID int64) ([]Transfer, error)
 	GetWithdraw(ctx context.Context, id int64) (Withdraw, error)
 	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]UserAccount, error)

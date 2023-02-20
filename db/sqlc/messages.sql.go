@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createMessages = `-- name: CreateMessages :one
@@ -22,10 +21,10 @@ INSERT INTO messages (
 `
 
 type CreateMessagesParams struct {
-	WhoAnswerID    sql.NullInt64 `json:"who_answer_id"`
-	WhoAskID       sql.NullInt64 `json:"who_ask_id"`
-	Specialization sql.NullInt64 `json:"specialization"`
-	MessageText    string        `json:"message_text"`
+	WhoAnswerID    int64  `json:"who_answer_id"`
+	WhoAskID       int64  `json:"who_ask_id"`
+	Specialization int64  `json:"specialization"`
+	MessageText    string `json:"message_text"`
 }
 
 func (q *Queries) CreateMessages(ctx context.Context, arg CreateMessagesParams) (Message, error) {
@@ -82,7 +81,7 @@ WHERE who_ask_id = $1
 ORDER BY created_at
 `
 
-func (q *Queries) GetMessagesFrom(ctx context.Context, whoAskID sql.NullInt64) ([]Message, error) {
+func (q *Queries) GetMessagesFrom(ctx context.Context, whoAskID int64) ([]Message, error) {
 	rows, err := q.db.QueryContext(ctx, getMessagesFrom, whoAskID)
 	if err != nil {
 		return nil, err
@@ -118,7 +117,7 @@ WHERE who_answer_id = $1
 ORDER BY created_at
 `
 
-func (q *Queries) GetMessagesTo(ctx context.Context, whoAnswerID sql.NullInt64) ([]Message, error) {
+func (q *Queries) GetMessagesTo(ctx context.Context, whoAnswerID int64) ([]Message, error) {
 	rows, err := q.db.QueryContext(ctx, getMessagesTo, whoAnswerID)
 	if err != nil {
 		return nil, err

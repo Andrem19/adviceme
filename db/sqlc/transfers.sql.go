@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createTransfer = `-- name: CreateTransfer :one
@@ -21,9 +20,9 @@ INSERT INTO transfers (
 `
 
 type CreateTransferParams struct {
-	FromAccountID sql.NullInt64 `json:"from_account_id"`
-	ToAccountID   sql.NullInt64 `json:"to_account_id"`
-	Amount        sql.NullInt64 `json:"amount"`
+	FromAccountID int64 `json:"from_account_id"`
+	ToAccountID   int64 `json:"to_account_id"`
+	Amount        int64 `json:"amount"`
 }
 
 func (q *Queries) CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error) {
@@ -63,7 +62,7 @@ WHERE from_account_id = $1
 ORDER BY id
 `
 
-func (q *Queries) GetTransfersFrom(ctx context.Context, fromAccountID sql.NullInt64) ([]Transfer, error) {
+func (q *Queries) GetTransfersFrom(ctx context.Context, fromAccountID int64) ([]Transfer, error) {
 	rows, err := q.db.QueryContext(ctx, getTransfersFrom, fromAccountID)
 	if err != nil {
 		return nil, err
@@ -98,7 +97,7 @@ WHERE to_account_id = $1
 ORDER BY id
 `
 
-func (q *Queries) GetTransfersTo(ctx context.Context, toAccountID sql.NullInt64) ([]Transfer, error) {
+func (q *Queries) GetTransfersTo(ctx context.Context, toAccountID int64) ([]Transfer, error) {
 	rows, err := q.db.QueryContext(ctx, getTransfersTo, toAccountID)
 	if err != nil {
 		return nil, err
@@ -136,8 +135,8 @@ ORDER BY id
 `
 
 type ListTransfersParams struct {
-	FromAccountID sql.NullInt64 `json:"from_account_id"`
-	ToAccountID   sql.NullInt64 `json:"to_account_id"`
+	FromAccountID int64 `json:"from_account_id"`
+	ToAccountID   int64 `json:"to_account_id"`
 }
 
 func (q *Queries) ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error) {
