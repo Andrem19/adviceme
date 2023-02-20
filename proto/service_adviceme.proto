@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package pb;
+
+import "rpc_create_user.proto";
+import "rpc_login_user.proto";
+
+option go_package = "github.com/andrem19/adviceme/pb";
+
+service AdviceMe {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserRsponse){}
+    rpc LoginUser (LoginUserRequest) returns (LoginUserRsponse) {}
+}

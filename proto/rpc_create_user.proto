@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+import "user.proto";
+
+option go_package = "github.com/andrem19/adviceme/pb";
+
+message CreateUserRequest {
+    string nickname = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message CreateUserRsponse {
+    User user =1;
+}
+
