@@ -12,6 +12,7 @@ CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
   "from_account_id" bigint,
   "to_account_id" bigint,
+  "amount" bigint,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
@@ -19,15 +20,17 @@ CREATE TABLE "entries" (
   "id" bigserial PRIMARY KEY,
   "user_id" bigint,
   "amount" bigint NOT NULL,
+  "messages" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "specialization" (
   "id" bigserial PRIMARY KEY,
   "branch" bigint,
-  "name" varchar NOT NULL,
-  "description" varchar NOT NULL,
-  "online" boolean DEFAULT false
+  "user_id" bigint,
+  "spec_name" varchar NOT NULL,
+  "descr" varchar NOT NULL,
+  "is_online" boolean DEFAULT false
 );
 
 CREATE TABLE "messages" (
@@ -36,20 +39,22 @@ CREATE TABLE "messages" (
   "who_answer_id" bigint,
   "specialization" bigint,
   "message_text" varchar NOT NULL,
-  "entries" bigint,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE TABLE "Branches" (
+CREATE TABLE "branches" (
   "id" bigserial PRIMARY KEY,
-  "name" varchar (100) NOT NULL
+  "branch_name" varchar (100) NOT NULL
 );
+
+CREATE TYPE status AS ENUM ('init', 'processed', 'completed');
 
 CREATE TABLE "purchase" (
   "id" bigserial PRIMARY KEY,
   "from_account_id" bigint,
   "amount_fiat" float8,
   "amount_coins" bigint,
+  "status_p" status,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
@@ -58,11 +63,14 @@ CREATE TABLE "withdraw" (
   "from_account_id" bigint,
   "amount_fiat" float8,
   "amount_coins" bigint,
+  "status_w" status,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "settings" (
-  "rate" float8
+  "id" bigserial PRIMARY KEY,
+  "rate" float8,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE INDEX ON "user_account" ("nickname");
@@ -87,13 +95,15 @@ ALTER TABLE "transfers" ADD FOREIGN KEY ("to_account_id") REFERENCES "user_accou
 
 ALTER TABLE "entries" ADD FOREIGN KEY ("user_id") REFERENCES "user_account" ("id");
 
-ALTER TABLE "specialization" ADD FOREIGN KEY ("branch") REFERENCES "Branches" ("id");
+ALTER TABLE "specialization" ADD FOREIGN KEY ("branch") REFERENCES "branches" ("id");
+
+ALTER TABLE "specialization" ADD FOREIGN KEY ("user_id") REFERENCES "user_account" ("id");
 
 ALTER TABLE "messages" ADD FOREIGN KEY ("who_ask_id") REFERENCES "user_account" ("id");
 
 ALTER TABLE "messages" ADD FOREIGN KEY ("who_answer_id") REFERENCES "user_account" ("id");
 
-ALTER TABLE "messages" ADD FOREIGN KEY ("entries") REFERENCES "entries" ("id");
+ALTER TABLE "entries" ADD FOREIGN KEY ("messages") REFERENCES "messages" ("id");
 
 ALTER TABLE "messages" ADD FOREIGN KEY ("specialization") REFERENCES "specialization" ("id");
 

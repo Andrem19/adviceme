@@ -6,12 +6,57 @@ package db
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"time"
 )
 
+type Status string
+
+const (
+	StatusInit      Status = "init"
+	StatusProcessed Status = "processed"
+	StatusCompleted Status = "completed"
+)
+
+func (e *Status) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = Status(s)
+	case string:
+		*e = Status(s)
+	default:
+		return fmt.Errorf("unsupported scan type for Status: %T", src)
+	}
+	return nil
+}
+
+type NullStatus struct {
+	Status Status
+	Valid  bool // Valid is true if Status is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.Status, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.Status.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.Status), nil
+}
+
 type Branch struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
+	ID         int64  `json:"id"`
+	BranchName string `json:"branch_name"`
 }
 
 type Entry struct {
@@ -19,6 +64,7 @@ type Entry struct {
 	UserID sql.NullInt64 `json:"user_id"`
 	// can be negative or positive
 	Amount    int64     `json:"amount"`
+	Messages  int64     `json:"messages"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
@@ -28,7 +74,6 @@ type Message struct {
 	WhoAnswerID    sql.NullInt64 `json:"who_answer_id"`
 	Specialization sql.NullInt64 `json:"specialization"`
 	MessageText    string        `json:"message_text"`
-	Entries        sql.NullInt64 `json:"entries"`
 	CreatedAt      time.Time     `json:"created_at"`
 }
 
@@ -37,25 +82,30 @@ type Purchase struct {
 	FromAccountID sql.NullInt64   `json:"from_account_id"`
 	AmountFiat    sql.NullFloat64 `json:"amount_fiat"`
 	AmountCoins   sql.NullInt64   `json:"amount_coins"`
+	StatusP       NullStatus      `json:"status_p"`
 	CreatedAt     time.Time       `json:"created_at"`
 }
 
 type Setting struct {
-	Rate sql.NullFloat64 `json:"rate"`
+	ID        int64           `json:"id"`
+	Rate      sql.NullFloat64 `json:"rate"`
+	CreatedAt time.Time       `json:"created_at"`
 }
 
 type Specialization struct {
-	ID          int64         `json:"id"`
-	Branch      sql.NullInt64 `json:"branch"`
-	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	Online      sql.NullBool  `json:"online"`
+	ID       int64         `json:"id"`
+	Branch   sql.NullInt64 `json:"branch"`
+	UserID   sql.NullInt64 `json:"user_id"`
+	SpecName string        `json:"spec_name"`
+	Descr    string        `json:"descr"`
+	IsOnline sql.NullBool  `json:"is_online"`
 }
 
 type Transfer struct {
 	ID            int64         `json:"id"`
 	FromAccountID sql.NullInt64 `json:"from_account_id"`
 	ToAccountID   sql.NullInt64 `json:"to_account_id"`
+	Amount        sql.NullInt64 `json:"amount"`
 	CreatedAt     time.Time     `json:"created_at"`
 }
 
@@ -74,5 +124,6 @@ type Withdraw struct {
 	FromAccountID sql.NullInt64   `json:"from_account_id"`
 	AmountFiat    sql.NullFloat64 `json:"amount_fiat"`
 	AmountCoins   sql.NullInt64   `json:"amount_coins"`
+	StatusW       NullStatus      `json:"status_w"`
 	CreatedAt     time.Time       `json:"created_at"`
 }
