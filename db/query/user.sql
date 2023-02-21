@@ -13,6 +13,10 @@ INSERT INTO user_account (
 SELECT * FROM user_account
 WHERE id = $1 LIMIT 1;
 
+-- name: GetUserAccount :one
+SELECT * FROM user_account
+WHERE nickname = $1 LIMIT 1;
+
 -- name: GetAccountForUpdate :one
 SELECT * FROM user_account
 WHERE id = $1 LIMIT 1

@@ -6,6 +6,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
@@ -14,6 +16,7 @@ type Querier interface {
 	CreateEntries(ctx context.Context, arg CreateEntriesParams) (Entry, error)
 	CreateMessages(ctx context.Context, arg CreateMessagesParams) (Message, error)
 	CreatePurchase(ctx context.Context, arg CreatePurchaseParams) (Purchase, error)
+	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateSettings(ctx context.Context, rate float64) (Setting, error)
 	CreateSpecialization(ctx context.Context, arg CreateSpecializationParams) (Specialization, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
@@ -36,12 +39,14 @@ type Querier interface {
 	GetMessagesTo(ctx context.Context, whoAnswerID int64) ([]Message, error)
 	GetPurchase(ctx context.Context, id int64) (Purchase, error)
 	GetPurchases(ctx context.Context, fromAccountID int64) ([]Purchase, error)
+	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	GetSettings(ctx context.Context, id int64) (Setting, error)
 	GetSpecialization(ctx context.Context, id int64) (Specialization, error)
 	GetSpecializationFrom(ctx context.Context, userID int64) ([]Specialization, error)
 	GetTransfer(ctx context.Context, id int64) (Transfer, error)
 	GetTransfersFrom(ctx context.Context, fromAccountID int64) ([]Transfer, error)
 	GetTransfersTo(ctx context.Context, toAccountID int64) ([]Transfer, error)
+	GetUserAccount(ctx context.Context, nickname string) (UserAccount, error)
 	GetWithdraw(ctx context.Context, id int64) (Withdraw, error)
 	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]UserAccount, error)

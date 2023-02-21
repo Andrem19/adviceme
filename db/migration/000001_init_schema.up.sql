@@ -1,6 +1,6 @@
 CREATE TABLE "user_account" (
   "id" bigserial PRIMARY KEY,
-  "nickname" varchar (100) NOT NULL,
+  "nickname" varchar (100) NOT NULL UNIQUE,
   "email" varchar NOT NULL,
   "balance" bigint NOT NULL,
   "hashed_password" varchar NOT NULL,
@@ -39,6 +39,17 @@ CREATE TABLE "messages" (
   "who_answer_id" bigint NOT NULL,
   "specialization" bigint NOT NULL,
   "message_text" varchar NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE "sessions" (
+  "id" uuid PRIMARY KEY,
+  "nickname" varchar NOT NULL,
+  "refresh_token" varchar NOT NULL,
+  "user_agent" varchar NOT NULL,
+  "client_ip" varchar NOT NULL,
+  "is_blocked" boolean NOT NULL DEFAULT false,
+  "expires_at" timestamptz NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
@@ -104,6 +115,8 @@ ALTER TABLE "messages" ADD FOREIGN KEY ("who_ask_id") REFERENCES "user_account" 
 ALTER TABLE "messages" ADD FOREIGN KEY ("who_answer_id") REFERENCES "user_account" ("id");
 
 ALTER TABLE "entries" ADD FOREIGN KEY ("messages") REFERENCES "messages" ("id");
+
+ALTER TABLE "sessions" ADD FOREIGN KEY ("nickname") REFERENCES "user_account" ("nickname");
 
 ALTER TABLE "messages" ADD FOREIGN KEY ("specialization") REFERENCES "specialization" ("id");
 

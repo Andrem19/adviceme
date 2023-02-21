@@ -9,6 +9,6 @@ option go_package = "github.com/andrem19/adviceme/pb";
 message User {
     string nickname = 1;
     string email = 2;
-    string password = 3;
-    google.protobuf.Timestamp CreatedAt = 4;
+    google.protobuf.Timestamp password_changed_at = 4;
+    google.protobuf.Timestamp CreatedAt = 5;
 }
